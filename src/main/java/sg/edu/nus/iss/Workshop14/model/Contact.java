@@ -1,8 +1,9 @@
 package sg.edu.nus.iss.Workshop14.model;
 
+import java.io.Serializable;
 import java.util.Random;
-
-public class Contact {
+ 
+public class Contact implements Serializable{
     private String name;
     private String email;
     private int phoneNumber;

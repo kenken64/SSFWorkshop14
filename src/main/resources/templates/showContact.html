@@ -8,7 +8,11 @@
 </head>
 <body th:object="${contact}">
     <h1>Your contact information</h1>
-   
+        <p>
+            Id: 
+        </p>
+        <p th:text="*{id}"></p>
+        <br>
         <p>
             Name: 
         </p>
@@ -26,10 +30,5 @@
         <p th:text="*{phoneNumber}"></p>
         
         <br>
-        <p>
-           <input type="submit" value="Save"/>
-        </p>
-        
-    </form>
 </body>
 </html>
