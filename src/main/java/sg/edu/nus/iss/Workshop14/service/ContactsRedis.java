@@ -28,7 +28,7 @@ public class ContactsRedis implements ContactsRepo {
         // Contact result = (Contact) redisTemplate.opsForValue().get(contactId);
         String name = (String) redisTemplate.opsForList().index(contactId, 0);
         String email = (String) redisTemplate.opsForList().index(contactId, 1);
-        String phoneNumber = (String) redisTemplate.opsForList().index(contactId, 2);
+        Integer phoneNumber = (Integer) redisTemplate.opsForList().index(contactId, 2);
         logger.info(">>> name " + name);
         logger.info(">>> email " + email);
         logger.info(">>> phoneNumber " + phoneNumber);
@@ -38,7 +38,7 @@ public class ContactsRedis implements ContactsRepo {
         ct.setId(contactId);
         ct.setName(name);
         ct.setEmail(email);
-        ct.setPhoneNumber(Integer.parseInt(phoneNumber));
+        ct.setPhoneNumber(phoneNumber.intValue());
 
         return ct;
     }
