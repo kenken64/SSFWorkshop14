@@ -1,5 +1,7 @@
 package sg.edu.nus.iss.Workshop14.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,8 @@ import sg.edu.nus.iss.Workshop14.service.ContactsRedis;
 
 @Controller
 public class AddressbookController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AddressbookController.class);
 
     @Autowired
     ContactsRedis service;
@@ -32,12 +36,9 @@ public class AddressbookController {
 
     @PostMapping("/contact")
     public String submitContact(@ModelAttribute Contact contact, Model model) {
-        Contact c = new Contact(
-                contact.getName(),
-                contact.getEmail(),
-                contact.getPhoneNumber());
-        service.save(c);
-        model.addAttribute("contact", c);
+        logger.info("contact id > " + contact.getId());
+        service.save(contact);
+        model.addAttribute("contact", contact);
         return "showContact";
     }
 }
