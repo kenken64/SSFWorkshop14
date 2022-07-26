@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +30,9 @@ public class RedisConfig {
     @Value("${spring.redis.password}")
     private String redisPassword;
 
+    @Value("${spring.redis.database}")
+    private int redisDatabase;
+
     @Bean
     @Scope("singleton")
     public RedisTemplate<String, Object> redisTemplate() {
@@ -38,7 +40,8 @@ public class RedisConfig {
         config.setHostName(redisHost);
         config.setPort(redisPort.get());
         config.setPassword(redisPassword);
-
+        logger.info("redisDatabase > " + redisDatabase);
+        config.setDatabase(redisDatabase);
         final JedisClientConfiguration jedisClient = JedisClientConfiguration.builder().build();
         final JedisConnectionFactory jedisFac = new JedisConnectionFactory(config, jedisClient);
         jedisFac.afterPropertiesSet();
@@ -49,8 +52,7 @@ public class RedisConfig {
 
         RedisSerializer<Object> serializer = new JdkSerializationRedisSerializer(getClass().getClassLoader());
         template.setValueSerializer(
-            serializer
-        );
+                serializer);
         return template;
     }
 }
