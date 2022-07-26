@@ -17,28 +17,25 @@ public class ContactsRedis implements ContactsRepo {
 
     @Override
     public void save(final Contact ctc) {
-        // redisTemplate.opsForValue().set(ctc.getId(), ctc);
-        redisTemplate.opsForList().rightPush(ctc.getId(), ctc.getName());
-        redisTemplate.opsForList().rightPush(ctc.getId(), ctc.getEmail());
-        redisTemplate.opsForList().rightPush(ctc.getId(), ctc.getPhoneNumber());
+        redisTemplate.opsForHash().put(ctc.getId(), "name", ctc.getName());
+        redisTemplate.opsForHash().put(ctc.getId(), "email", ctc.getEmail());
+        redisTemplate.opsForHash().put(ctc.getId(), "phoneNumber", ctc.getPhoneNumber());
     }
 
     @Override
     public Contact findById(final String contactId) {
-        // Contact result = (Contact) redisTemplate.opsForValue().get(contactId);
-        String name = (String) redisTemplate.opsForList().index(contactId, 0);
-        String email = (String) redisTemplate.opsForList().index(contactId, 1);
-        String phoneNumber = (String) redisTemplate.opsForList().index(contactId, 2);
+        String name = (String) redisTemplate.opsForHash().get(contactId, "name");
+        String email = (String) redisTemplate.opsForHash().get(contactId, "email");
+        Integer phoneNumber = (Integer) redisTemplate.opsForHash().get(contactId, "phoneNumber");
         logger.info(">>> name " + name);
         logger.info(">>> email " + email);
         logger.info(">>> phoneNumber " + phoneNumber);
-        
 
         Contact ct = new Contact();
         ct.setId(contactId);
         ct.setName(name);
         ct.setEmail(email);
-        ct.setPhoneNumber(Integer.parseInt(phoneNumber));
+        ct.setPhoneNumber(phoneNumber.intValue());
 
         return ct;
     }
