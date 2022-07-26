@@ -17,13 +17,29 @@ public class ContactsRedis implements ContactsRepo {
 
     @Override
     public void save(final Contact ctc) {
-        redisTemplate.opsForValue().set(ctc.getId(), ctc);
+        // redisTemplate.opsForValue().set(ctc.getId(), ctc);
+        redisTemplate.opsForList().rightPush(ctc.getId(), ctc.getName());
+        redisTemplate.opsForList().rightPush(ctc.getId(), ctc.getEmail());
+        redisTemplate.opsForList().rightPush(ctc.getId(), ctc.getPhoneNumber());
     }
 
     @Override
     public Contact findById(final String contactId) {
-        Contact result = (Contact) redisTemplate.opsForValue().get(contactId);
-        logger.info(">>> " + result.getEmail());
-        return result;
+        // Contact result = (Contact) redisTemplate.opsForValue().get(contactId);
+        String name = (String) redisTemplate.opsForList().index(contactId, 0);
+        String email = (String) redisTemplate.opsForList().index(contactId, 1);
+        String phoneNumber = (String) redisTemplate.opsForList().index(contactId, 2);
+        logger.info(">>> name " + name);
+        logger.info(">>> email " + email);
+        logger.info(">>> phoneNumber " + phoneNumber);
+        
+
+        Contact ct = new Contact();
+        ct.setId(contactId);
+        ct.setName(name);
+        ct.setEmail(email);
+        ct.setPhoneNumber(Integer.parseInt(phoneNumber));
+
+        return ct;
     }
 }
